@@ -1,0 +1,206 @@
+<table>
+    <tr>
+        <td>
+            <img src='doctor.png' id='doctor'>
+        </td>
+        <td>
+            <img src='virus.jpg' id='virus'>
+        </td>
+        <td>
+
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+
+    </tr>
+</table>
+<div>
+    осталось вирусов: <span id='count'>9</span>
+</div>
+время : <span id='timer'>11</span>
+<audio src='game-over.mp3' id='gameOver'></audio>
+<audio src='shot.mp3' id='shot'></audio>
+<audio src='winner.mp3' id='winner'></audio>
+
+<script>
+    function randomInteger(min, max) {
+        // получить случайное число от (min-0.5) до (max+0.5)
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
+    }
+    var interval = setInterval(function () {
+        timer.innerText--
+
+        if (timer.innerText === '0') {
+            gameOver.play();
+            doctor.remove();
+            window.onkeydown = null
+            clearInterval(interval);
+        }
+
+
+    }, 1000);
+    var doctorx = 1
+    var doctory = 1
+    var doctorindex = 0
+    var virusx = 2
+    var virusy = 2
+    var virusindex = 1
+    var ячейки = document.getElementsByTagName('td')
+    var количествоЯчеек = ячейки.length
+    var строки = document.getElementsByTagName('tr')
+    var количествоСтрок = (строки.length)
+    var количествоСтолбцов = количествоЯчеек / количествоСтрок
+    var doctorindex = (doctory - 1) * (количествоСтолбцов) + (doctorx - 1)
+    var ячейкаДляДоктора = ячейки[doctorindex]
+    ячейкаДляДоктора.append(doctor)
+    function докторИди() {
+        doctorindex = (doctory - 1) * (количествоСтолбцов) + (doctorx - 1)
+        ячейкаДляДоктора = ячейки[doctorindex]
+        ячейкаДляДоктора.append(doctor)
+        if (doctorindex === virusindex) {
+            shot.currentTime = 0
+            shot.play()
+            count.innerText--
+            if (count.innerText === '0') {
+                winner.play();
+                virus.remove();
+                window.onkeydown = null
+                clearInterval(interval);
+            } else {
+                вирусИди();
+            }
+        }
+
+    }
+    function вирусИди() {
+
+        while (virusx === doctorx && virusy === doctory) {
+            virusx = randomInteger(1, количествоСтолбцов)
+            virusy = randomInteger(1, количествоСтрок)
+        }
+        virusindex = (virusy - 1) * (количествоСтолбцов) + (virusx - 1)
+        var ячейкаДляВируса = ячейки[virusindex]
+        ячейкаДляВируса.append(virus)
+    }
+    window.onkeydown = function (событие) {
+        if (событие.code === 'ArrowDown') {
+
+            doctory = doctory + 1;
+            докторИди()
+
+        }
+        if (событие.code === 'ArrowUp') {
+            doctory = doctory - 1;
+            докторИди()
+        }
+        if (событие.code === 'ArrowRight') {
+            doctorx = doctorx + 1;
+            докторИди()
+
+        }
+        if (событие.code === 'ArrowLeft') {
+            doctorx = doctorx - 1;
+            докторИди()
+
+        }
+
+    }
+</script>
+<style>
+    img {
+        height: 50px;
+        width: 50px;
+    }
+
+    table {
+        border-spacing: 0px;
+        border-collapse: collapse;
+    }
+
+    td {
+        border: 1px black solid;
+
+        height: 52px;
+        width: 52px;
+    }
+</style>
