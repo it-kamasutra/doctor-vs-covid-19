@@ -1,13 +1,10 @@
 <table>
     <tr>
         <td>
-            <img src='doctor.png' id='doctor'>
+            <img src='doctor.png' id='доктор'>
         </td>
         <td>
-            <img src='virus.jpg' id='virus'>
-        </td>
-        <td>
-
+            <img src='virus.jpg' id='вирус'>
         </td>
         <td>
         </td>
@@ -15,7 +12,6 @@
         </td>
         <td>
         </td>
-
     </tr>
     <tr>
         <td>
@@ -28,9 +24,6 @@
         </td>
         <td>
         </td>
-        <td>
-        </td>
-
     </tr>
     <tr>
         <td>
@@ -43,9 +36,6 @@
         </td>
         <td>
         </td>
-        <td>
-        </td>
-
     </tr>
     <tr>
         <td>
@@ -58,9 +48,6 @@
         </td>
         <td>
         </td>
-        <td>
-        </td>
-
     </tr>
     <tr>
         <td>
@@ -73,9 +60,6 @@
         </td>
         <td>
         </td>
-        <td>
-        </td>
-
     </tr>
     <tr>
         <td>
@@ -88,17 +72,19 @@
         </td>
         <td>
         </td>
-        <td>
-        </td>
-
     </tr>
+
+
 </table>
+
 <div>
-    осталось вирусов: <span id='count'>9</span>
+    Осталось вирусов: <span id='count'>40</span>
 </div>
-время : <span id='timer'>11</span>
-<audio src='game-over.mp3' id='gameOver'></audio>
+<div>
+    Время: <span id='timer'>60</span>
+</div>
 <audio src='shot.mp3' id='shot'></audio>
+<audio src='game-over.mp3' id='gameOver'></audio>
 <audio src='winner.mp3' id='winner'></audio>
 
 <script>
@@ -107,86 +93,136 @@
         let rand = min - 0.5 + Math.random() * (max - min + 1);
         return Math.round(rand);
     }
+
     var interval = setInterval(function () {
         timer.innerText--
 
+        // если добежали до 0, то мы проиграли
         if (timer.innerText === '0') {
-            gameOver.play();
-            doctor.remove();
+            gameOver.play()
+            доктор.remove()
             window.onkeydown = null
-            clearInterval(interval);
+            clearInterval(interval)
         }
-
-
+        // значит нужно вопроизвести gameOver
+        // нужно перестать реагировать на клавиши
+        // удалить доктора  
     }, 1000);
-    var doctorx = 1
-    var doctory = 1
-    var doctorindex = 0
-    var virusx = 2
-    var virusy = 2
-    var virusindex = 1
+
+    var докторИкс = 1
+    var докторИгрек = 1
+    var докторИндекс = 0
+
+    var вирусИкс = 2
+    var вирусИгрек = 1
+    var вирусИндекс = 1
+
+
+    // просим документ найти все теги td и записываем их в переменную 'ячейки' 
     var ячейки = document.getElementsByTagName('td')
+    // считаем кол-во ячеек
     var количествоЯчеек = ячейки.length
+    // находим все строки
     var строки = document.getElementsByTagName('tr')
-    var количествоСтрок = (строки.length)
-    var количествоСтолбцов = количествоЯчеек / количествоСтрок
-    var doctorindex = (doctory - 1) * (количествоСтолбцов) + (doctorx - 1)
-    var ячейкаДляДоктора = ячейки[doctorindex]
-    ячейкаДляДоктора.append(doctor)
+    // считаем кол-во всех строк
+    var количествоСтрок = строки.length
+    // подсчитываем кол-во столбцов
+    var количествоСтолбиков = количествоЯчеек / количествоСтрок
+
+
     function докторИди() {
-        doctorindex = (doctory - 1) * (количествоСтолбцов) + (doctorx - 1)
-        ячейкаДляДоктора = ячейки[doctorindex]
-        ячейкаДляДоктора.append(doctor)
-        if (doctorindex === virusindex) {
-            shot.currentTime = 0
+        // по супер формуле подсчитываем индекс доктора на основе его x и y
+        докторИндекс = (докторИгрек - 1) * количествоСтолбиков + (докторИкс - 1)
+        // достаём из массива 'ячейки' ячейку с индексом доктора
+        var ячейкаДляДоктора = ячейки[докторИндекс]
+        // говорим: ячейка, положи внутрь себя доктора
+        ячейкаДляДоктора.append(доктор)
+
+        // если доктор в той же ячейке, что и вирус - выстрел 
+        if (докторИндекс === вирусИндекс) {
+            shot.currentTime = 0;
             shot.play()
             count.innerText--
+
+            // если после уменьшения, у нас осталось 0 вирусов, то мы
+            // победили
             if (count.innerText === '0') {
                 winner.play();
-                virus.remove();
+                // убиваем вирус
+                вирус.remove();
+                // не хотим, чтобы доктор двигался
                 window.onkeydown = null
-                clearInterval(interval);
+                clearInterval(interval)
             } else {
+                // а если вирусы ещё остались - даём команду вирусу: ИДИ
                 вирусИди();
             }
         }
-
     }
     function вирусИди() {
-
-        while (virusx === doctorx && virusy === doctory) {
-            virusx = randomInteger(1, количествоСтолбцов)
-            virusy = randomInteger(1, количествоСтрок)
+        while (вирусИкс === докторИкс && вирусИгрек === докторИгрек) {
+            вирусИкс = randomInteger(1, количествоСтолбиков)
+            вирусИгрек = randomInteger(1, количествоСтрок)
         }
-        virusindex = (virusy - 1) * (количествоСтолбцов) + (virusx - 1)
-        var ячейкаДляВируса = ячейки[virusindex]
-        ячейкаДляВируса.append(virus)
+
+        // по супер формуле подсчитываем индекс вируса на основе его x и y
+        вирусИндекс = (вирусИгрек - 1) * количествоСтолбиков + (вирусИкс - 1)
+        // достаём из массива 'ячейки' ячейку с индексом вируса
+        var ячейкаДляВируса = ячейки[вирусИндекс]
+        // говорим: ячейка, положи внутрь себя доктора
+        ячейкаДляВируса.append(вирус)
     }
+
+
     window.onkeydown = function (событие) {
         if (событие.code === 'ArrowDown') {
-
-            doctory = doctory + 1;
-            докторИди()
-
+            if (докторИгрек < количествоСтрок) {
+                докторИгрек = докторИгрек + 1;
+                докторИди()
+            }
         }
         if (событие.code === 'ArrowUp') {
-            doctory = doctory - 1;
-            докторИди()
+            // если мы 2,3,4 то есть есть куда уменьшать
+            if (докторИгрек > 1) {
+                докторИгрек = докторИгрек - 1;
+                докторИди()
+            }
         }
         if (событие.code === 'ArrowRight') {
-            doctorx = doctorx + 1;
-            докторИди()
-
+            // если мы меньше кол-ва столбиков, то есть куда увеличивать
+            if (докторИкс < количествоСтолбиков) {
+                докторИкс = докторИкс + 1;
+                докторИди()
+            }
         }
         if (событие.code === 'ArrowLeft') {
-            doctorx = doctorx - 1;
-            докторИди()
-
+            // если мы больше 1, то есть есть куда уменьшать, хотя бы до той же единицы
+            if (докторИкс > 1) {
+                докторИкс = докторИкс - 1;
+                докторИди()
+            }
         }
-
     }
 </script>
+
+
+
+
+
+
 <style>
+    span {
+        font-weight: bold;
+    }
+
+    #count {
+        color: chartreuse;
+    }
+
+    #timer {
+        color: red;
+    }
+
     img {
         height: 50px;
         width: 50px;
@@ -199,8 +235,7 @@
 
     td {
         border: 1px black solid;
-
-        height: 52px;
-        width: 52px;
+        height: 50px;
+        width: 50px;
     }
 </style>
